@@ -1,0 +1,62 @@
+function pahandle = openAudio(deviceName, reqlatencyclass, Fs)
+% pahandle = openAudio(deviceName)
+% Opens PsychtPortAudio and Snd to same pahandle for desired sound device 
+% Inputs: 
+%   deviceName: (string) desired device name for presenting audio stimuli 
+%       Options: 'Scarlett' 'sysdefault' 'default' 
+%       If no deviceName specified, opens 'Scarlett' if detected, 'default' otherwise 
+%   reqlatencyclass: (double) elects how aggressive PsychPortAudio should be about
+%       minimizing sound latency and getting good deterministic timing 
+%       1 (default) = Try to get the lowest latency that is possible under the constraint of reliable playback
+%   Fs: (double) Requested playback/capture rate in samples per second (Hz)
+%       44100 (default) 
+% Outputs: 
+%   pahandle: (string) device handle for the device
+
+%% Close audio, then initialize 
+PsychPortAudio('Close');
+
+%% Find all sound devices 
+PsychPortAudioDevices = PsychPortAudio('GetDevices');
+PsychPortAudioDeviceNames = {PsychPortAudioDevices.DeviceName};
+PsychPortAudioDeviceIndex = [PsychPortAudioDevices.DeviceIndex];
+
+%% Check inputs 
+if nargin < 3
+    Fs = 44100; 
+end
+if nargin < 2
+    reqlatencyclass = 1; 
+end
+if nargin < 1 
+    if any(strcmp(PsychPortAudioDeviceNames,'Scarlett'))
+        disp('Scarlett found...')
+    else any(strcmp(PsychPortAudioDeviceNames,'default'))
+        disp('Scarlett found...')
+    end
+end 
+
+%% Settings
+
+p.reqlatencyclass = 1; 
+p.Fs = 44100; 
+
+%% Find desired audio device
+deviceName = 'Scarlett'; % desired device; 'sysdefault' 'Scarlett' 'MacBook Pro Microphone'
+
+% Initialize the sound driver
+InitializePsychSound(1);
+
+% Look for desired device
+deviceNameIdxs = find( contains(PsychPortAudioDeviceNames, deviceName) );
+deviceIdx =  PsychPortAudioDeviceIndex( deviceNameIdxs(:,1) );
+if isempty(deviceNameIdxs)
+    error('Desired device %s not found. Try again.', deviceName);
+else
+    fprintf('Desired device %s found. Initializing...', deviceName);
+end
+
+%% Open audio
+pahandle = PsychPortAudio('Open', deviceIdx(1), 1, p.reqlatencyclass,  p.auditoryFB.Fs, 2); %scarlett, mode, latency, Fs, stereo
+Snd('Open', pahandle, 1); % links eyetracker sound output to psychportaudio
+disp('BU audio initialized. ')
