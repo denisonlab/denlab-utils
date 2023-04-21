@@ -1,5 +1,5 @@
-function pahandle = openAudio(deviceName, reqlatencyclass, Fs)
-% pahandle = openAudio(deviceName)
+function pahandle = denlab_openAudio(deviceName, reqlatencyclass, Fs)
+% pahandle = denlab_openAudio(deviceName)
 % Opens PsychPortAudio and Snd to the same pahandle for desired sound device. 
 % Eyetracker uses Snd; Psychtoolbox uses PsychPortAudio. 
 % Inputs: 
