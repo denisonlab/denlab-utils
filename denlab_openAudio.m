@@ -36,7 +36,7 @@ if nargin < 1
     if any(strcmp(PsychPortAudioDeviceNames,'Scarlett'))
         disp('Scarlett sound device found...')
     elseif any(strcmp(PsychPortAudioDeviceNames,'default'))
-        disp('Default sound devie found...')
+        disp('Default sound device found...')
     else 
         error('Scarlett and default sound devices not found. Please check sound setup.')
     end
