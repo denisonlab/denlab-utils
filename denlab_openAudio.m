@@ -12,7 +12,7 @@ function pahandle = denlab_openAudio(deviceName, reqlatencyclass, Fs)
 %   Fs: (double) Requested playback/capture rate in samples per second (Hz)
 %       44100 (default) 
 % Outputs: 
-%   pahandle: (string) device handle for the device
+%   pahandle: (double) device handle for the device
 
 %% Close audio, then initialize 
 PsychPortAudio('Close');
